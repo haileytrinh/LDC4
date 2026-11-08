@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://qa6kub78ui5r"]
+
+[ext_resource type="PackedScene" uid="uid://ewbfhdt67jxg" path="res://wolf.tscn" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://cds2rc7jh2khm" path="res://node_2d.tscn" id="2_h2yge"]
+
+[node name="Node2D" type="Node2D" unique_id=778940516]
+
+[node name="Wolf" parent="." unique_id=528376113 instance=ExtResource("1_0xm2m")]
+position = Vector2(-326, 12)
+
+[node name="Node2D" parent="." unique_id=1092029942 instance=ExtResource("2_h2yge")]
