@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://db0f81afgcotr"]
+
+[ext_resource type="Script" uid="uid://b2valmvjrtbbk" path="res://hunter.gd" id="1_hgowg"]
+[ext_resource type="Texture2D" uid="uid://brwr2bvfp5lh2" path="res://icon.svg" id="2_ink7b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ln42d"]
+size = Vector2(126, 126)
+
+[node name="Hunter" type="CharacterBody2D" unique_id=243705381 groups=["hunters"]]
+collision_layer = 2
+motion_mode = 1
+script = ExtResource("1_hgowg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2123262246]
+shape = SubResource("RectangleShape2D_ln42d")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1051920255]
+texture = ExtResource("2_ink7b")

@@ -15,3 +15,6 @@ func _unhandled_input(event):
 			if area.has_method("interact"):
 				area.interact()
 				break
+
+func _ready():
+	add_to_group("wolf")
