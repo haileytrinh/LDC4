@@ -11,14 +11,16 @@ enum State { PATROL, INVESTIGATE, CHASE, RETURN, STUNNED }
 ## A Node2D whose Marker2D children are the patrol points, in order.
 @export var waypoint_parent: Node2D
 @export var patrol_speed := 90.0
-@export var pause_time := 1.2
+@export var pause_time := 4.0
 ## false = loop around the points, true = walk to the end and back again
 @export var ping_pong := true
 
 @export_group("Senses")
-@export var vision_range := 160.0
+@export var vision_range := 320.0
 ## Full width of the cone, in degrees
 @export var vision_angle := 60.0
+## Total degrees the cone sweeps side to side while he looks around
+@export var look_sweep_angle := 150.0
 ## Wolf must stay in the cone this long before the hunter reacts (fairness window)
 @export var notice_time := 0.25
 ## Physics layers that block line of sight (layer 1 = walls and trees)
@@ -32,7 +34,7 @@ enum State { PATROL, INVESTIGATE, CHASE, RETURN, STUNNED }
 
 @export_group("Investigate")
 @export var investigate_speed := 110.0
-@export var investigate_wait := 3.0
+@export var investigate_wait := 4.0
 
 var state := State.PATROL
 var facing := Vector2.RIGHT
@@ -53,10 +55,14 @@ var lose_left := 0.0
 var stun_left := 0.0
 var pause_t := 0.0
 var pause_angle := 0.0
+var wait_total := 1.0
+var start_facing := Vector2.RIGHT
 
 
 func _ready() -> void:
 	add_to_group("hunters")
+	add_to_group("resettable")
+	start_facing = facing
 	wolf = get_tree().get_first_node_in_group("wolf")
 	spawn_pos = global_position
 	if waypoint_parent:
@@ -177,6 +183,7 @@ func stun(seconds: float) -> void:
 func reset() -> void:
 	global_position = spawn_pos
 	velocity = Vector2.ZERO
+	facing = start_facing
 	wp_index = 0
 	wp_dir = 1
 	wait_left = 0.0
@@ -223,6 +230,7 @@ func _begin_return() -> void:
 
 func _start_wait(seconds: float) -> void:
 	wait_left = seconds
+	wait_total = seconds
 	pause_t = 0.0
 	pause_angle = facing.angle()
 	velocity = Vector2.ZERO
@@ -232,7 +240,9 @@ func _start_wait(seconds: float) -> void:
 func _look_around(delta: float) -> void:
 	velocity = Vector2.ZERO
 	pause_t += delta
-	facing = Vector2.from_angle(pause_angle + sin(pause_t * 2.5) * 0.9)
+	var progress := clampf(pause_t / maxf(wait_total, 0.01), 0.0, 1.0)
+	var half_sweep := deg_to_rad(look_sweep_angle) * 0.5
+	facing = Vector2.from_angle(pause_angle + sin(progress * TAU) * half_sweep)
 
 
 ## Returns true if the hunter just switched to CHASE
