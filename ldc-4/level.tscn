@@ -140,8 +140,10 @@ texture = ExtResource("4_km5ld")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_1bvp3")
 
-[node name="Level" type="Node2D" unique_id=778940516]
+[node name="Level" type="Node2D" unique_id=778940516 node_paths=PackedStringArray("wolf", "fade")]
 script = ExtResource("1_f2txt")
+wolf = NodePath("Wolf")
+fade = NodePath("Transition Screen/ColorRect")
 
 [node name="Wolf" parent="." unique_id=528376113 instance=ExtResource("2_1ainy")]
 position = Vector2(-326, 12)
@@ -165,3 +167,10 @@ tile_map_data = PackedByteArray("AAAIAOz/AAAAAAAAAAAIAO3/AAAAAAEAAAAIAO7/AAAAAAI
 tile_set = SubResource("TileSet_lquwl")
 
 [node name="Node2D" parent="." unique_id=1092029942 instance=ExtResource("5_i2t4f")]
+
+[node name="Transition Screen" type="CanvasLayer" parent="." unique_id=1813944139]
+
+[node name="ColorRect" type="ColorRect" parent="Transition Screen" unique_id=361949382]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0, 0, 0, 1)

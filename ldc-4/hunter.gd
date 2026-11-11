@@ -30,7 +30,7 @@ enum State { PATROL, INVESTIGATE, CHASE, RETURN, STUNNED }
 @export var chase_speed := 200.0
 ## Seconds the hunter keeps chasing after losing sight of the wolf
 @export var lose_time := 3.0
-@export var catch_distance := 14.0
+@export var catch_distance := 130.0
 
 @export_group("Investigate")
 @export var investigate_speed := 110.0
