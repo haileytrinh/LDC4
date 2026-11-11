@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bc8sb6uuocnat"]
+
+[ext_resource type="Script" uid="uid://cd2owleuyhfpm" path="res://fire.gd" id="1_5ltu8"]
+[ext_resource type="Texture2D" uid="uid://brwr2bvfp5lh2" path="res://icon.svg" id="2_x6ecg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_icfi2"]
+
+[node name="fire" type="Node2D" unique_id=520020536]
+script = ExtResource("1_5ltu8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1282767124]
+modulate = Color(1, 0.25327614, 0.82336706, 1)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_x6ecg")
+
+[node name="Blocker" type="StaticBody2D" parent="." unique_id=2118101969]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocker" unique_id=732022415]
+scale = Vector2(5, 5)
+shape = SubResource("RectangleShape2D_icfi2")

@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cxt18hho3fj1r"]
+
+[ext_resource type="Script" uid="uid://bw4ifgxcph8vv" path="res://bear_trap.gd" id="1_cfooo"]
+[ext_resource type="Texture2D" uid="uid://brwr2bvfp5lh2" path="res://icon.svg" id="2_rae5t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jptci"]
+
+[node name="bear trap" type="Area2D" unique_id=217941650]
+modulate = Color(0.72491693, 0.66311574, 1, 1)
+scale = Vector2(0.8, 0.8)
+collision_mask = 2
+script = ExtResource("1_cfooo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1602078250]
+texture = ExtResource("2_rae5t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1215968144]
+scale = Vector2(6, 6)
+shape = SubResource("RectangleShape2D_jptci")

@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://3n88h5h2upgn"]
+
+[ext_resource type="Script" uid="uid://c1mvv0vnj7hca" path="res://lantern.gd" id="1_aeluj"]
+[ext_resource type="Texture2D" uid="uid://brwr2bvfp5lh2" path="res://icon.svg" id="2_s57vn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y7vr3"]
+
+[node name="lantern" type="Area2D" unique_id=419049589]
+modulate = Color(0.99999994, 0.32323506, 0.08927045, 1)
+scale = Vector2(0.8, 0.8)
+script = ExtResource("1_aeluj")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1363688800]
+texture = ExtResource("2_s57vn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=667779603]
+scale = Vector2(6, 6)
+shape = SubResource("RectangleShape2D_y7vr3")

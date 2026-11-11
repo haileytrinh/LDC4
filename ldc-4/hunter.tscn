@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ln42d"]
 size = Vector2(126, 126)
 
-[node name="Hunter" type="CharacterBody2D" unique_id=243705381 groups=["hunters"]]
+[node name="Hunter" type="CharacterBody2D" unique_id=243705381]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_hgowg")
