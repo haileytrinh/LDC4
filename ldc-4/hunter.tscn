@@ -16,3 +16,16 @@ shape = SubResource("RectangleShape2D_ln42d")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1051920255]
 texture = ExtResource("2_ink7b")
+
+[node name="Alert" type="Label" parent="." unique_id=613502074]
+z_index = 10
+offset_left = -19.0
+offset_top = -120.0
+offset_right = 21.0
+offset_bottom = -53.0
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+
+[node name="NavAgent" type="NavigationAgent2D" parent="." unique_id=820009345]
+path_desired_distance = 8.0
+target_desired_distance = 8.0

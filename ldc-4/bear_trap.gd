@@ -20,10 +20,25 @@ func _on_body_entered(body: Node) -> void:
 	if not armed:
 		return
 	if body.is_in_group("hunters"):
-		armed = false
-		_show_state()
+		_spring()
 		body.stun(stun_time)
-		# TODO: play trap snap sound here
+	elif body.is_in_group("wolf"):
+		_spring()
+		get_tree().call_group("level", "_on_caught")
+	# TODO: play trap snap sound here
+
+
+func _spring() -> void:
+	armed = false
+	_show_state()
+	if has_node("SnapSound"):
+		$SnapSound.play()
+	if has_node("Sprite2D"):
+		# Quick squash-and-recover so the snap reads even without art
+		var s: Sprite2D = $Sprite2D
+		var t := create_tween()
+		t.tween_property(s, "scale", s.scale * 1.25, 0.05)
+		t.tween_property(s, "scale", s.scale, 0.1)
 
 
 ## Called by the level on respawn.

@@ -3,7 +3,7 @@ extends Area2D
 ## lure nearby hunters to a spot, ignite a Fire node, or both.
 
 ## Hunters within this distance of the lantern hear it fall
-@export var hear_radius := 600.0
+@export var hear_radius := 1500.0
 ## Turn off for a lantern that only starts a fire
 @export var lure_hunters := true
 ## Optional: where hunters walk to. Defaults to the lantern itself.

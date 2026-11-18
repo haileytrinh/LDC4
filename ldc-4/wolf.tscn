@@ -10,6 +10,7 @@ size = Vector2(73.25577, 124)
 size = Vector2(153, 149.75)
 
 [node name="Wolf" type="CharacterBody2D" unique_id=528376113]
+collision_layer = 4
 motion_mode = 1
 script = ExtResource("1_6trwa")
 

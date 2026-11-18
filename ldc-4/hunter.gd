@@ -57,6 +57,9 @@ var pause_t := 0.0
 var pause_angle := 0.0
 var wait_total := 1.0
 var start_facing := Vector2.RIGHT
+@onready var alert: Label = get_node_or_null("Alert")
+@onready var nav: NavigationAgent2D = get_node_or_null("NavAgent")
+var last_nav_target := Vector2.INF
 
 
 func _ready() -> void:
@@ -74,6 +77,14 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# Touching the wolf is always a catch, even before he has noticed it
+	if state != State.STUNNED and wolf and global_position.distance_to(wolf.global_position) <= catch_distance:
+		velocity = Vector2.ZERO
+		caught_player.emit()
+		state = State.STUNNED
+		stun_left = 999.0
+		return
+	
 	match state:
 		State.PATROL: _patrol(delta)
 		State.INVESTIGATE: _investigate(delta)
@@ -92,7 +103,7 @@ func _process(_delta: float) -> void:
 	queue_redraw()
 	if has_node("Sprite2D"):
 		$Sprite2D.flip_h = facing.x < 0.0
-
+	_update_alert()
 
 # states ----------------------------------------------------------------
 
@@ -165,6 +176,7 @@ func _stunned(delta: float) -> void:
 
 ## Called by lanterns and other lures. Ignored while chasing or stunned.
 func investigate(pos: Vector2) -> void:
+	print("investigate target: ", pos, " hunter at: ", global_position)
 	if state == State.CHASE or state == State.STUNNED:
 		return
 	investigate_target = pos
@@ -194,13 +206,24 @@ func reset() -> void:
 
 # helpers ----------------------------------------------------------------
 
-## Walks toward a point. Returns true once there.
+## Walks toward a point, going around walls. Returns true once there.
 func _move_to(target: Vector2, speed: float) -> bool:
-	var to := target - global_position
-	if to.length() < 6.0:
+	var dest := target
+	# Use the navmesh once it is ready, otherwise fall back to a straight line
+	if nav and NavigationServer2D.map_get_iteration_id(nav.get_navigation_map()) > 0:
+		if last_nav_target.distance_to(target) > 4.0:
+			nav.target_position = target
+			last_nav_target = target
+		if nav.is_navigation_finished():
+			velocity = Vector2.ZERO
+			last_nav_target = Vector2.INF  # allows the same target to be used again
+			return true
+		dest = nav.get_next_path_position()
+	elif global_position.distance_to(target) < 6.0:
 		velocity = Vector2.ZERO
 		return true
-	velocity = to.normalized() * speed
+
+	velocity = (dest - global_position).normalized() * speed
 	return false
 
 
@@ -277,6 +300,21 @@ func _can_see_wolf() -> bool:
 
 
 # visuals ----------------------------------------------------------------
+
+func _update_alert() -> void:
+	if alert == null:
+		return
+	match state:
+		State.INVESTIGATE:
+			alert.text = "?"
+			alert.add_theme_color_override("font_color", Color("#E8913A"))
+			alert.visible = true
+		State.CHASE:
+			alert.text = "!"
+			alert.add_theme_color_override("font_color", Color("#E04030"))
+			alert.visible = true
+		_:
+			alert.visible = false
 
 func _draw() -> void:
 	var half_cone := deg_to_rad(vision_angle) * 0.5
