@@ -2,7 +2,7 @@ extends Area2D
 ## A hunter who walks over it is pinned for stun_time seconds. One use per attempt.
 
 
-@export var stun_time := 8.0
+@export var stun_time := 600.0
 ## Placeholder visuals: tints the Sprite2D. Swap for frames once real art is in.
 @export var armed_color := Color(0.85, 0.85, 0.9)
 @export var sprung_color := Color(0.4, 0.4, 0.45)
