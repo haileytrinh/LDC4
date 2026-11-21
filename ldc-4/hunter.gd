@@ -14,6 +14,11 @@ enum State { PATROL, INVESTIGATE, CHASE, RETURN, STUNNED }
 @export var pause_time := 4.0
 ## false = loop around the points, true = walk to the end and back again
 @export var ping_pong := true
+## Direction he faces at the start, and when he returns to his post.
+## 0 = right, 90 = down, 180 = left, -90 = up
+@export_range(-180, 180, 1, "degrees") var start_direction := 0.0
+## A hunter with one post stays facing start_direction instead of looking around
+@export var guard_looks_around := false
 
 @export_group("Senses")
 @export var vision_range := 320.0
@@ -38,6 +43,7 @@ enum State { PATROL, INVESTIGATE, CHASE, RETURN, STUNNED }
 
 var state := State.PATROL
 var facing := Vector2.RIGHT
+var is_guard := false
 
 var waypoints: Array[Vector2] = []
 var wp_index := 0
@@ -65,6 +71,7 @@ var last_nav_target := Vector2.INF
 func _ready() -> void:
 	add_to_group("hunters")
 	add_to_group("resettable")
+	facing = Vector2.from_angle(deg_to_rad(start_direction))
 	start_facing = facing
 	wolf = get_tree().get_first_node_in_group("wolf")
 	spawn_pos = global_position
@@ -72,6 +79,7 @@ func _ready() -> void:
 		for c in waypoint_parent.get_children():
 			if c is Node2D:
 				waypoints.append(c.global_position)
+	is_guard = waypoints.size() < 2
 	if waypoints.is_empty():
 		waypoints.append(global_position)
 
@@ -109,6 +117,10 @@ func _process(_delta: float) -> void:
 
 func _patrol(delta: float) -> void:
 	if _check_for_wolf(delta):
+		return
+	if is_guard and not guard_looks_around:
+		velocity = Vector2.ZERO
+		_turn_toward(start_facing, delta)
 		return
 
 	if wait_left > 0.0:
@@ -205,6 +217,9 @@ func reset() -> void:
 
 
 # helpers ----------------------------------------------------------------
+
+func _turn_toward(dir: Vector2, delta: float) -> void:
+	facing = Vector2.from_angle(lerp_angle(facing.angle(), dir.angle(), 6.0 * delta))
 
 ## Walks toward a point, going around walls. Returns true once there.
 func _move_to(target: Vector2, speed: float) -> bool:
