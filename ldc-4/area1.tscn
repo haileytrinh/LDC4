@@ -16,7 +16,7 @@ parsed_geometry_type = 1
 parsed_collision_mask = 4294967041
 agent_radius = 70.0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1bvp3"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pi6wq"]
 texture = ExtResource("4_km5ld")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -61,6 +61,7 @@ texture = ExtResource("4_km5ld")
 4:2/0 = 0
 4:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:2/0 = 0
+5:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:2/0 = 0
 6:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:2/0 = 0
@@ -148,7 +149,7 @@ texture = ExtResource("4_km5ld")
 
 [sub_resource type="TileSet" id="TileSet_lquwl"]
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_1bvp3")
+sources/0 = SubResource("TileSetAtlasSource_pi6wq")
 
 [node name="Level" type="Node2D" unique_id=778940516 node_paths=PackedStringArray("wolf", "fade")]
 script = ExtResource("1_f2txt")

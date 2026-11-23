@@ -17,8 +17,12 @@ enum State { PATROL, INVESTIGATE, CHASE, RETURN, STUNNED }
 ## Direction he faces at the start, and when he returns to his post.
 ## 0 = right, 90 = down, 180 = left, -90 = up
 @export_range(-180, 180, 1, "degrees") var start_direction := 0.0
-## A hunter with one post stays facing start_direction instead of looking around
-@export var guard_looks_around := false
+## Watch-post hunters sweep side to side continuously; others just face start_direction
+@export var guard_sweeps := false
+## Seconds for one full back-and-forth sweep
+@export var guard_sweep_time := 5.0
+## Tower hunters shouldn't climb down for a lantern
+@export var ignores_lures := false
 
 @export_group("Senses")
 @export var vision_range := 320.0
@@ -63,6 +67,7 @@ var pause_t := 0.0
 var pause_angle := 0.0
 var wait_total := 1.0
 var start_facing := Vector2.RIGHT
+var guard_t := 0.0
 @onready var alert: Label = get_node_or_null("Alert")
 @onready var nav: NavigationAgent2D = get_node_or_null("NavAgent")
 var last_nav_target := Vector2.INF
@@ -118,9 +123,8 @@ func _process(_delta: float) -> void:
 func _patrol(delta: float) -> void:
 	if _check_for_wolf(delta):
 		return
-	if is_guard and not guard_looks_around:
-		velocity = Vector2.ZERO
-		_turn_toward(start_facing, delta)
+	if is_guard:
+		_guard_watch(delta)
 		return
 
 	if wait_left > 0.0:
@@ -189,7 +193,7 @@ func _stunned(delta: float) -> void:
 ## Called by lanterns and other lures. Ignored while chasing or stunned.
 func investigate(pos: Vector2) -> void:
 	print("investigate target: ", pos, " hunter at: ", global_position)
-	if state == State.CHASE or state == State.STUNNED:
+	if state == State.CHASE or state == State.STUNNED or ignores_lures:
 		return
 	investigate_target = pos
 	arrived = false
@@ -214,12 +218,25 @@ func reset() -> void:
 	seen_time = 0.0
 	arrived = false
 	state = State.PATROL
+	guard_t = 0.0
 
 
 # helpers ----------------------------------------------------------------
 
 func _turn_toward(dir: Vector2, delta: float) -> void:
 	facing = Vector2.from_angle(lerp_angle(facing.angle(), dir.angle(), 6.0 * delta))
+
+func _guard_watch(delta: float) -> void:
+	velocity = Vector2.ZERO
+	if not guard_sweeps:
+		_turn_toward(start_facing, delta)
+		return
+	guard_t += delta
+	var half := deg_to_rad(look_sweep_angle) * 0.5
+	var phase := guard_t / maxf(guard_sweep_time, 0.01) * TAU
+	var target := start_facing.angle() + sin(phase) * half
+	# Easing toward the target means he swings smoothly back into the sweep after a chase
+	facing = Vector2.from_angle(lerp_angle(facing.angle(), target, 10.0 * delta))
 
 ## Walks toward a point, going around walls. Returns true once there.
 func _move_to(target: Vector2, speed: float) -> bool:

@@ -5,7 +5,7 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_icfi2"]
 
-[node name="fire" type="Node2D" unique_id=520020536]
+[node name="Fire" type="Node2D" unique_id=520020536]
 script = ExtResource("1_5ltu8")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1282767124]

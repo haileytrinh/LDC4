@@ -10,6 +10,8 @@ extends Area2D
 @export var lure_target: Node2D
 ## Optional: a Fire node (fire.gd) to ignite when the lantern falls
 @export var fire: Node2D
+## Optional: only these hunters respond. Leave empty to use Hear Radius instead.
+@export var responders: Array[Node2D] = []
 
 var used := false
 var light_energy := 1.0
@@ -34,9 +36,12 @@ func interact() -> void:
 
 	if lure_hunters:
 		var pos := lure_target.global_position if lure_target else global_position
-		for h in get_tree().get_nodes_in_group("hunters"):
-			if h.global_position.distance_to(global_position) <= hear_radius:
-				h.investigate(pos)
+		var listeners: Array = responders if not responders.is_empty() \
+				else get_tree().get_nodes_in_group("hunters")
+		for h in listeners:
+			if responders.is_empty() and h.global_position.distance_to(global_position) > hear_radius:
+				continue
+			h.investigate(pos)
 
 
 ## Called by the level on respawn.
